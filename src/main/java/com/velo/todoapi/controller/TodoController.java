@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
+@CrossOrigin("http://localhost:3000/")
 @RestController
 @RequestMapping("/api")
 public class TodoController {
@@ -34,5 +35,25 @@ public class TodoController {
         return todoRepository.save(todo);
     }
 
+//    @PutMapping("/todos/{id}")
+//    public Optional<Todo> updateTodo(@PathVariable("id") Long id, @RequestBody Todo updatedTodo) {
+//        return this.todoRepository.findById(id)
+//                .map(todo -> this.todoRepository.save(updatedTodo));
+//    }
+
+    @PutMapping("/todos/{id}")
+    public Optional<Todo> updateTodo(@PathVariable("id") Long id, @RequestBody Todo updatedTodo) {
+        return this.todoRepository.findById(id)
+                .map(todo -> {
+                    todo.setTitle(updatedTodo.getTitle());
+                    todo.setCompleted(updatedTodo.getCompleted());
+                    return todoRepository.save(todo);
+                });
+    }
+
+    @DeleteMapping("/todos/{id}")
+    public void deleteTodo(@PathVariable("id") Long id) {
+        todoRepository.deleteById(id);
+    }
 
 }
